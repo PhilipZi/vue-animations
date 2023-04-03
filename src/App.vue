@@ -9,17 +9,32 @@
     <h2 v-if="flag">Hello</h2>
   </Transition> -->
 
-  <Transition
+  <!-- <Transition
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
     @before-leave="beforeLeave"
     @leave="leave"
     @after-leave="afterLeave"
-    :css="false"
+    :css="true"
+    name="fade"
   >
     <h2 v-if="flag">Hey!</h2>
-  </Transition>
+  </Transition> -->
+
+  <button @click="addItem">Add</button>
+
+  <ul>
+    <TransitionGroup name="fade">
+      <li
+        v-for="(number, index) in numbers"
+        :key="number"
+        @click="removeItem(index)"
+      >
+        {{ number }}
+      </li>
+    </TransitionGroup>
+  </ul>
 </template>
 
 <script>
@@ -28,22 +43,31 @@ export default {
   data() {
     return {
       flag: true,
+      numbers: [1, 2, 3, 4, 5],
     };
   },
   methods: {
+    addItem() {
+      const num = Math.floor(Math.random() * 100 + 1);
+      const index = Math.floor(Math.random() * this.numbers.length);
+      this.numbers.splice(index, 0, num);
+    },
+    removeItem(index) {
+      this.numbers.splice(index, 1);
+    },
     beforeEnter(el) {
       console.log("be event fired", el);
     },
-    enter(el, done) {
+    enter(el) {
       console.log("e event fired", el);
 
-      const animation = el.animate([{ transform: "scale3d(0,0,0)" }, {}], {
-        duration: 1000,
-      });
+      // const animation = el.animate([{ transform: "scale3d(0,0,0)" }, {}], {
+      //   duration: 1000,
+      // });
 
-      animation.onfinish = () => {
-        done();
-      };
+      // animation.onfinish = () => {
+      //   done();
+      // };
     },
     afterEnter(el) {
       console.log("ae event fired", el);
@@ -51,15 +75,15 @@ export default {
     beforeLeave(el) {
       console.log("bL event fired", el);
     },
-    leave(el, done) {
+    leave(el) {
       console.log("l event fired", el);
-      const animation = el.animate([{}, { transform: "scale3d(0,0,0)" }], {
-        duration: 1000,
-      });
+      // const animation = el.animate([{}, { transform: "scale3d(0,0,0)" }], {
+      //   duration: 1000,
+      // });
 
-      animation.onfinish = () => {
-        done();
-      };
+      // animation.onfinish = () => {
+      //   done();
+      // };
     },
     afterLeave(el) {
       console.log("aL event fired", el);
@@ -69,6 +93,11 @@ export default {
 </script>
 
 <style>
+li {
+  font-size: 22px;
+  cursor: pointer;
+}
+
 h2 {
   width: 400px;
   padding: 20px;
