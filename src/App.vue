@@ -4,8 +4,21 @@
     <h2 v-if="flag" key="main">Hello world!</h2>
     <h2 v-else key="secondary">Another hello!</h2>
   </transition> -->
-  <Transition name="zoom" type="animation" appear>
+
+  <!-- <Transition name="zoom" type="animation" appear>
     <h2 v-if="flag">Hello</h2>
+  </Transition> -->
+
+  <Transition
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave"
+    :css="false"
+  >
+    <h2 v-if="flag">Hey!</h2>
   </Transition>
 </template>
 
@@ -16,6 +29,41 @@ export default {
     return {
       flag: true,
     };
+  },
+  methods: {
+    beforeEnter(el) {
+      console.log("be event fired", el);
+    },
+    enter(el, done) {
+      console.log("e event fired", el);
+
+      const animation = el.animate([{ transform: "scale3d(0,0,0)" }, {}], {
+        duration: 1000,
+      });
+
+      animation.onfinish = () => {
+        done();
+      };
+    },
+    afterEnter(el) {
+      console.log("ae event fired", el);
+    },
+    beforeLeave(el) {
+      console.log("bL event fired", el);
+    },
+    leave(el, done) {
+      console.log("l event fired", el);
+      const animation = el.animate([{}, { transform: "scale3d(0,0,0)" }], {
+        duration: 1000,
+      });
+
+      animation.onfinish = () => {
+        done();
+      };
+    },
+    afterLeave(el) {
+      console.log("aL event fired", el);
+    },
   },
 };
 </script>
